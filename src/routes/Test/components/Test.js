@@ -1,34 +1,39 @@
 import React, { Component } from 'react'
-import Snoowrap from 'snoowrap'
 import PropTypes from 'prop-types'
 
 export default class Test extends Component {
   static propTypes = {
     user: PropTypes.object,
-  }
-  componentDidMount () {
-    console.log(this.props)
+    getHotPost: PropTypes.func,
+    posts: PropTypes.array,
   }
 
   componentWillReceiveProps (nextProps) {
-    console.log(nextProps.user)
-    const r = new Snoowrap({
-      userAgent: window.navigator.userAgent,
-      clientId: 'K4BqkiNaZCwlIA',
-      clientSecret: 'SlI--S25WsfEaj1EfisP8CgAV7k',
-      refreshToken: nextProps.user.refresh_token,
-      accessToken: nextProps.user.access_token,
-    })
+    const {
+      user,
+      getHotPost,
+    } = nextProps
 
-    console.log(r)
+    const currentUser = this.props.user
 
-    r.getHot().map(post => post.title).then(console.log)
+    if (
+      user.refresh_token &&
+      user.access_token &&
+      currentUser.refresh_token !== user.refresh_token &&
+      currentUser.access_token !== user.access_token
+    ) {
+      getHotPost({
+        refreshToken: user.refresh_token,
+        accessToken: user.access_token,
+      })
+    }
   }
 
   render () {
+    console.log(this.props.posts);
     return (
       <div>
-        test
+        {this.props.posts.map(post => <div key={post.id}>{post.id}</div>)}
       </div>
     )
   }
