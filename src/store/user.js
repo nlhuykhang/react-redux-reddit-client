@@ -1,16 +1,3 @@
-// import Snoowrap from 'snoowrap'
-
-// const r = new Snoowrap({
-//   userAgent: window.navigator.userAgent,
-//   clientId: 'K4BqkiNaZCwlIA',
-//   clientSecret: 'SlI--S25WsfEaj1EfisP8CgAV7k',
-//   refreshToken: ''
-// })
-
-// console.log(r)
-
-// r.getHot().map(post => post.title).then(console.log)
-
 export const USER_LOGIN = 'USER_LOGIN'
 export const USER_LOGIN_SUCCESS = 'USER_LOGIN_SUCCESS'
 export const USER_LOGOUT = 'USER_LOGOUT'

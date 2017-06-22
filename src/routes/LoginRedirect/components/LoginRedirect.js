@@ -20,7 +20,7 @@ export default class LoginRedirect extends Component {
 
   componentWillReceiveProps (nextProps) {
     if (nextProps.isLogin) {
-      nextProps.router.push('/')
+      nextProps.router.push('/test')
     }
   }
 
