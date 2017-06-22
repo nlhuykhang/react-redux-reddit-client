@@ -3,6 +3,7 @@ import thunk from 'redux-thunk'
 import { browserHistory } from 'react-router'
 import makeRootReducer from './reducers'
 import { updateLocation } from './location'
+import { persistStore, autoRehydrate } from 'redux-persist'
 
 const createStore = (initialState = {}) => {
   // ======================================================
@@ -13,7 +14,7 @@ const createStore = (initialState = {}) => {
   // ======================================================
   // Store Enhancers
   // ======================================================
-  const enhancers = []
+  const enhancers = [autoRehydrate()]
   let composeEnhancers = compose
 
   if (__DEV__) {
@@ -44,6 +45,8 @@ const createStore = (initialState = {}) => {
       store.replaceReducer(reducers(store.asyncReducers))
     })
   }
+
+  persistStore(store)
 
   return store
 }
