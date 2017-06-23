@@ -6,7 +6,6 @@ import { getHotPost, getDenormalizedPosts } from '../../../store/post'
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    // posts: state.entities.posts.allIds,
     posts: getDenormalizedPosts(
       state.entities.posts.allIds,
       state.entities.posts.byId,

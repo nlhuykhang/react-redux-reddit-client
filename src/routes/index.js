@@ -6,18 +6,41 @@ import Login from './Login'
 import LoginRedirect from './LoginRedirect'
 import Test from './Test'
 
+const requireAuth = (store) => (nextState, replace, callback) => {
+  const {
+    access_token: accessToken,
+    refresh_token: refreshToken,
+  } = store.getState().user
+
+  if (!accessToken || !refreshToken) {
+    replace('/login')
+  }
+
+  return callback()
+}
+
 /*  Note: Instead of using JSX, we recommend using react-router
     PlainRoute objects to build route definitions.   */
 
 export const createRoutes = (store) => ({
-  path        : '/',
-  component   : CoreLayout,
-  indexRoute  : Home,
+  path: '/',
   childRoutes : [
-    CounterRoute(store),
-    Login(store),
-    LoginRedirect(store),
-    Test(store),
+    {
+      component: CoreLayout,
+      onEnter: requireAuth(store),
+      childRoutes: [
+        Test(store),
+      ]
+    },
+    {
+      component: CoreLayout,
+      indexRoute: Home,
+      childRoutes: [
+        CounterRoute(store),
+        Login(store),
+        LoginRedirect(store),
+      ]
+    }
   ]
 })
 

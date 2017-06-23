@@ -12,6 +12,7 @@ export default class Test extends Component {
     const {
       user,
       getHotPost,
+      posts,
     } = nextProps
 
     const currentUser = this.props.user
@@ -20,17 +21,14 @@ export default class Test extends Component {
       user.refresh_token &&
       user.access_token &&
       currentUser.refresh_token !== user.refresh_token &&
-      currentUser.access_token !== user.access_token
+      currentUser.access_token !== user.access_token &&
+      posts.length === 0
     ) {
-      getHotPost({
-        refreshToken: user.refresh_token,
-        accessToken: user.access_token,
-      })
+      getHotPost()
     }
   }
 
   render () {
-    console.log(this.props.posts);
     return (
       <div>
         {this.props.posts.map(post => <div key={post.id}>{post.id}</div>)}

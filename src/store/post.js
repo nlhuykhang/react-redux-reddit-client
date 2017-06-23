@@ -13,21 +13,31 @@ export function getDenormalizedPosts (ids = [], data = {}) {
   return denormalize({ posts: ids }, postSchema, { post: data })
 }
 
-export const getHotPost = ({ refreshToken, accessToken }) => dispatch => {
-  const r = new Snoowrap({
-    userAgent: window.navigator.userAgent,
-    clientId: 'K4BqkiNaZCwlIA',
-    clientSecret: 'SlI--S25WsfEaj1EfisP8CgAV7k',
-    refreshToken,
-    accessToken,
-  })
+export const getHotPost = () => (dispatch, getState) => {
+  const state = getState()
+  const {
+    refresh_token: refreshToken,
+    access_token: accessToken,
+  } = state.user
 
-  return r.getHot().map(post => post.toJSON()).then(posts => {
-    dispatch({
-      type: NEW_POSTS,
-      posts,
+  if (refreshToken && accessToken) {
+    const r = new Snoowrap({
+      userAgent: window.navigator.userAgent,
+      clientId: 'K4BqkiNaZCwlIA',
+      clientSecret: 'SlI--S25WsfEaj1EfisP8CgAV7k',
+      refreshToken,
+      accessToken,
     })
-  })
+
+    return r.getHot().map(post => post.toJSON()).then(posts => {
+      dispatch({
+        type: NEW_POSTS,
+        posts,
+      })
+    })
+  }
+
+  return Promise.resolve()
 }
 
 export default function postReducer (state = {
