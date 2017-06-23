@@ -9,7 +9,6 @@ export const NEW_POST = 'NEW_POST'
 export const NEW_POSTS = 'NEW_POSTS'
 
 export function getDenormalizedPosts (ids = [], data = {}) {
-  console.log(denormalize({ posts: ids }, postSchema, { post: data }))
   return denormalize({ posts: ids }, postSchema, { post: data })
 }
 

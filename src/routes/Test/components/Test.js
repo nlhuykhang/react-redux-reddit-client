@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import Post from '../../../components/Post'
 
 export default class Test extends Component {
   static propTypes = {
@@ -31,7 +32,7 @@ export default class Test extends Component {
   render () {
     return (
       <div>
-        {this.props.posts.map(post => <div key={post.id}>{post.id}</div>)}
+        {this.props.posts.map(post => <Post key={post.id} {...post} />)}
       </div>
     )
   }
