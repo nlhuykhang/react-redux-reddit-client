@@ -4,8 +4,9 @@ import { browserHistory } from 'react-router'
 import makeRootReducer from './reducers'
 import { updateLocation } from './location'
 import { persistStore, autoRehydrate } from 'redux-persist'
+import { updateLoading } from './loading'
 
-const createStore = (initialState = {}) => {
+const createStore = (initialState = { loading: true }) => {
   // ======================================================
   // Middleware Configuration
   // ======================================================
@@ -46,7 +47,7 @@ const createStore = (initialState = {}) => {
     })
   }
 
-  persistStore(store)
+  persistStore(store, {}, () => store.dispatch(updateLoading(false)))
 
   return store
 }

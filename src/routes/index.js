@@ -7,12 +7,17 @@ import LoginRedirect from './LoginRedirect'
 import Test from './Test'
 
 const requireAuth = (store) => (nextState, replace, callback) => {
-  const {
-    access_token: accessToken,
-    refresh_token: refreshToken,
-  } = store.getState().user
+  const state = store.getState()
 
-  if (!accessToken || !refreshToken) {
+  const {
+    user: {
+      access_token: accessToken,
+      refresh_token: refreshToken,
+    },
+    loading,
+  } = state
+
+  if (!loading && (!accessToken || !refreshToken)) {
     replace('/login')
   }
 
