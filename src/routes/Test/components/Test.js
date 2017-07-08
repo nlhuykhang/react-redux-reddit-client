@@ -1,12 +1,22 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Post from '../../../components/Post'
+import { exeActionIfNotLoggedIn } from '../../../helpers'
 
 export default class Test extends Component {
   static propTypes = {
     user: PropTypes.object,
     getHotPost: PropTypes.func,
     posts: PropTypes.array,
+    router: PropTypes.object,
+  }
+
+  componentDidMount () {
+    const {
+      router,
+    } = this.props
+
+    exeActionIfNotLoggedIn(this.props)(() => router.push('/login'))
   }
 
   componentWillReceiveProps (nextProps) {

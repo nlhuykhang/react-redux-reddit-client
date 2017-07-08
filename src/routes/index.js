@@ -5,21 +5,12 @@ import CounterRoute from './Counter'
 import Login from './Login'
 import LoginRedirect from './LoginRedirect'
 import Test from './Test'
+import { exeActionIfNotLoggedIn } from '../helpers'
 
 const requireAuth = (store) => (nextState, replace, callback) => {
   const state = store.getState()
 
-  const {
-    user: {
-      access_token: accessToken,
-      refresh_token: refreshToken,
-    },
-    loading,
-  } = state
-
-  if (!loading && (!accessToken || !refreshToken)) {
-    replace('/login')
-  }
+  exeActionIfNotLoggedIn(state)(() => replace('/login'))
 
   return callback()
 }

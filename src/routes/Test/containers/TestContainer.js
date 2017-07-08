@@ -10,7 +10,6 @@ const mapStateToProps = (state) => {
       state.entities.posts.allIds,
       state.entities.posts.byId,
     ).posts || []
-    // posts: [],
   }
 }
 
