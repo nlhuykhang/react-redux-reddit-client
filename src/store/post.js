@@ -12,7 +12,13 @@ export function getDenormalizedPosts (ids = [], data = {}) {
   return denormalize({ posts: ids }, postSchema, { post: data })
 }
 
-export const getHotPost = () => (dispatch, getState) => {
+export function getPostsDesc (...params) {
+  return getDenormalizedPosts(...params).posts.sort(
+    (a, b) => b.score - a.score
+  )
+}
+
+export const getHotPost = (after) => (dispatch, getState) => {
   const state = getState()
   const {
     refresh_token: refreshToken,
@@ -31,6 +37,7 @@ export const getHotPost = () => (dispatch, getState) => {
     return r.getHot().map(post => post.toJSON()).then(posts => {
       dispatch({
         type: NEW_POSTS,
+        after,
         posts,
       })
     })
@@ -42,6 +49,7 @@ export const getHotPost = () => (dispatch, getState) => {
 export default function postReducer (state = {
   byId: {},
   allIds: [],
+  hotIds: [],
 }, action) {
   switch (action.type) {
     case NEW_POSTS:
@@ -49,12 +57,21 @@ export default function postReducer (state = {
         posts: action.posts,
       }, postSchema)
 
+      const postIds = action.posts.map(p => p.id)
+
       return {
         byId: {
           ...state.byId || {},
           ...normalizedData.entities.post,
         },
-        allIds: uniq([...state.allIds || [], ...normalizedData.result.posts]),
+        allIds: uniq([
+          ...state.allIds || [],
+          ...normalizedData.result.posts
+        ]),
+        hotIds: action.after ? [
+          ...state.hotIds || [],
+          ...postIds
+        ] : postIds,
       }
     default:
       return state

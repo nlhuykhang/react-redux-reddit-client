@@ -42,6 +42,7 @@ export default class Test extends Component {
   render () {
     return (
       <div>
+        <button onClick={this.props.getHotPost}>Get hot posts</button>
         {this.props.posts.map(post => <Post key={post.id} {...post} />)}
       </div>
     )

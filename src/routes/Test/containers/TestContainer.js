@@ -7,9 +7,9 @@ const mapStateToProps = (state) => {
   return {
     user: state.user,
     posts: getDenormalizedPosts(
-      state.entities.posts.allIds,
+      state.entities.posts.hotIds,
       state.entities.posts.byId,
-    ).posts || []
+    ).posts
   }
 }
 
