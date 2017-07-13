@@ -12,7 +12,7 @@ const mapStateToProps = (state) => {
     posts: getDenormalizedPosts(
       state.entities.posts.hotIds,
       state.entities.posts.byId,
-    ).posts,
+    ),
     lastReload: new Date(state.entities.posts.lastReload),
   }
 }
