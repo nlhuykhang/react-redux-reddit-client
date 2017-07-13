@@ -3,46 +3,46 @@ import PropTypes from 'prop-types'
 import Post from '../../../components/Post'
 import { exeActionIfNotLoggedIn } from '../../../helpers'
 
+function isBeforeOneHour (time) {
+  return new Date().getTime() - time.getTime() > 3600000
+}
+
 export default class Test extends Component {
   static propTypes = {
-    user: PropTypes.object,
     getHotPost: PropTypes.func,
     posts: PropTypes.array,
     router: PropTypes.object,
+    lastReload: PropTypes.instanceOf(Date)
   }
 
   componentDidMount () {
     const {
       router,
+      getHotPost,
+      lastReload,
     } = this.props
 
     exeActionIfNotLoggedIn(this.props)(() => router.push('/login'))
-  }
-
-  componentWillReceiveProps (nextProps) {
-    const {
-      user,
-      getHotPost,
-      posts,
-    } = nextProps
-
-    const currentUser = this.props.user
 
     if (
-      user.refresh_token &&
-      user.access_token &&
-      currentUser.refresh_token !== user.refresh_token &&
-      currentUser.access_token !== user.access_token &&
-      posts.length === 0
+      !lastReload ||
+      isBeforeOneHour(lastReload)
     ) {
-      getHotPost()
+      getHotPost({ reload: true })
+    } else {
+
     }
+  }
+
+  reloadHotPost = () => {
+    this.props.getHotPost({ reload: true })
   }
 
   render () {
     return (
       <div>
-        <button onClick={this.props.getHotPost}>Get hot posts</button>
+        <button onClick={this.props.getHotPost}>Get more hot posts</button>
+        <button onClick={this.reloadHotPost}>Reload hot posts</button>
         {this.props.posts.map(post => <Post key={post.id} {...post} />)}
       </div>
     )

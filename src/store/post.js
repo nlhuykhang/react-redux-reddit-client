@@ -18,12 +18,22 @@ export function getPostsDesc (...params) {
   )
 }
 
-export const getHotPost = (after) => (dispatch, getState) => {
+export function getLastHotPostFullname (state) {
+  const lastHotPostId = state.hotIds[state.hotIds.length - 1]
+  return lastHotPostId && state.byId[lastHotPostId] && state.byId[lastHotPostId].name
+}
+
+export const getHotPost = ({
+  reload,
+  limit = 5,
+}) => (dispatch, getState) => {
   const state = getState()
   const {
     refresh_token: refreshToken,
     access_token: accessToken,
   } = state.user
+
+  const lastHotPostName = getLastHotPostFullname(state.entities.posts)
 
   if (refreshToken && accessToken) {
     const r = new Snoowrap({
@@ -34,10 +44,13 @@ export const getHotPost = (after) => (dispatch, getState) => {
       accessToken,
     })
 
-    return r.getHot().map(post => post.toJSON()).then(posts => {
+    return r.getHot({
+      limit,
+      after: !reload ? lastHotPostName : undefined,
+    }).map(post => post.toJSON()).then(posts => {
       dispatch({
         type: NEW_POSTS,
-        after,
+        after: !reload ? lastHotPostName : undefined,
         posts,
       })
     })
@@ -50,6 +63,7 @@ export default function postReducer (state = {
   byId: {},
   allIds: [],
   hotIds: [],
+  lastReload: null,
 }, action) {
   switch (action.type) {
     case NEW_POSTS:
@@ -72,6 +86,7 @@ export default function postReducer (state = {
           ...state.hotIds || [],
           ...postIds
         ] : postIds,
+        lastReload: action.after ? state.lastReload : new Date(),
       }
     default:
       return state

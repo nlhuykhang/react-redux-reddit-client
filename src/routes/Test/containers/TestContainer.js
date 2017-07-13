@@ -1,7 +1,10 @@
 import { connect } from 'react-redux'
 
 import Test from '../components/Test'
-import { getHotPost, getDenormalizedPosts } from '../../../store/post'
+import {
+  getHotPost,
+  getDenormalizedPosts,
+} from '../../../store/post'
 
 const mapStateToProps = (state) => {
   return {
@@ -9,7 +12,8 @@ const mapStateToProps = (state) => {
     posts: getDenormalizedPosts(
       state.entities.posts.hotIds,
       state.entities.posts.byId,
-    ).posts
+    ).posts,
+    lastReload: new Date(state.entities.posts.lastReload),
   }
 }
 
